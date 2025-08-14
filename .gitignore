@@ -1,0 +1,18 @@
+# Build folders
+/build/
+/cmake-build-*/
+
+# Conan
+/conan.lock
+/conan_cache/
+
+# VSCode
+.vscode/
+
+# CMake generated
+CMakeFiles/
+CMakeCache.txt
+*.cmake
+
+# Logs
+*.log

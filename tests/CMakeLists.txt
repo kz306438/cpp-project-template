@@ -8,8 +8,7 @@ target_include_directories(EmailValidatorTest
 target_link_libraries(EmailValidatorTest
     PRIVATE
         EmailValidator
-        ${GTest_LIBRARIES}
-        pthread    
+        gtest::gtest
 )
 
 add_test(NAME EmailValidatorTest COMMAND EmailValidatorTest)

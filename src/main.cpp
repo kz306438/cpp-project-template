@@ -1,6 +1,5 @@
-#include "email_validator.h"
-
 #include <iostream>
+#include "email_validator.h"
 
 int main()
 {

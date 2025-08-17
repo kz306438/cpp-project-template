@@ -13,5 +13,8 @@ CMakeCache.txt
 # but don't ignore toolchain.cmake
 !cmake/toolchain.cmake
 
+compile_commands.json
+CMakeUserPresets.json
+
 # Logs
 *.log

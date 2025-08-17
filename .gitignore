@@ -10,6 +10,8 @@
 CMakeFiles/
 CMakeCache.txt
 *.cmake
+# but don't ignore toolchain.cmake
+!cmake/toolchain.cmake
 
 # Logs
 *.log

@@ -6,9 +6,6 @@
 /conan.lock
 /conan_cache/
 
-# VSCode
-.vscode/
-
 # CMake generated
 CMakeFiles/
 CMakeCache.txt

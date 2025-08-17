@@ -1,0 +1,57 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": { "major": 3, "minor": 21 },
+  "configurePresets": [
+    {
+      "name": "debug-ninja",
+      "displayName": "Debug (Ninja)",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/debug-ninja",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/toolchain.cmake"
+      }
+    },
+    {
+      "name": "debug-asan-ninja",
+      "displayName": "Debug + AddressSanitizer (Ninja)",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/debug-asan-ninja",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "SANITIZER": "address",
+        "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/toolchain.cmake"
+      }
+    },
+    {
+      "name": "release-ninja",
+      "displayName": "Release (Ninja, optimized)",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/release-ninja",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/toolchain.cmake"
+      }
+    },
+    {
+      "name": "debug-vs",
+      "displayName": "Debug (Visual Studio)",
+      "generator": "Visual Studio 17 2022",
+      "binaryDir": "${sourceDir}/build/debug-vs",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/toolchain.cmake"
+      }
+    },
+    {
+      "name": "debug-make",
+      "displayName": "Debug (Unix Makefiles)",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build/debug-make",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/cmake/toolchain.cmake"
+      }
+    }
+  ]
+}

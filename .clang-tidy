@@ -1,0 +1,20 @@
+Checks: >
+  cppcoreguidelines-*,
+  modernize-*,
+  performance-*,
+  bugprone-*,
+  readability-*
+
+# выключаем слишком навязчивые
+CheckOptions:
+  - key:             modernize-use-trailing-return-type.IgnoreMacros
+    value:           'true'
+  - key:             readability-identifier-naming.FunctionCase
+    value:           lowerCamelCase
+  - key:             readability-identifier-naming.VariableCase
+    value:           lowerCamelCase
+  - key:             readability-identifier-naming.PrivateMemberPrefix
+    value:           m_
+WarningsAsErrors: ''
+FormatStyle: none
+HeaderFilterRegex: '.*'

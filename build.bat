@@ -1,38 +1,105 @@
 @echo off
 setlocal enabledelayedexpansion
 
-REM Параметры по умолчанию
-set "GENERATOR=%~1"
-if "%GENERATOR%"=="" set "GENERATOR=Ninja"
+:: ==============================
+:: Defaults
+:: ==============================
+set BUILD_TYPE=Debug
+set GENERATOR=Ninja
+set SANITIZER=
+set CONAN_DIR=build\conan
+set BUILD_DIR=
 
-set "BUILD_TYPE=%~2"
-if "%BUILD_TYPE%"=="" set "BUILD_TYPE=Release"
+:: ==============================
+:: Help message
+:: ==============================
+:usage
+echo Usage: %~nx0 [options]
+echo.
+echo Options:
+echo   --type ^<Debug^|Release^|RelWithDebInfo^|MinSizeRel^>   Build type (default: Debug)
+echo   --gen  ^<Ninja^|Unix Makefiles^|Visual Studio 17 2022^> Generator (default: Ninja)
+echo   --san  ^<address^|undefined^|thread^|memory^>           Sanitizer (Linux/Clang/GCC only)
+echo   --help                                                 Show this help
+exit /b 1
 
-set "BUILD_DIR=build"
+:: ==============================
+:: Parse arguments
+:: ==============================
+:parse_args
+if "%~1"=="" goto after_parse
 
-REM Создаём папку сборки
+if "%~1"=="--type" (
+    set BUILD_TYPE=%~2
+    shift
+    shift
+    goto parse_args
+)
+
+if "%~1"=="--gen" (
+    set GENERATOR=%~2
+    shift
+    shift
+    goto parse_args
+)
+
+if "%~1"=="--san" (
+    set SANITIZER=%~2
+    shift
+    shift
+    goto parse_args
+)
+
+if "%~1"=="--help" (
+    goto usage
+)
+
+echo Unknown option: %~1
+goto usage
+
+:after_parse
+
+:: ==============================
+:: Derived build dir name
+:: ==============================
+set "GENERATOR_SANITIZED=%GENERATOR: =-%"
+set "GENERATOR_SANITIZED=%GENERATOR_SANITIZED:"=%"
+set "GENERATOR_SANITIZED=%GENERATOR_SANITIZED:~0,64%"
+
+set "BUILD_DIR=build\%GENERATOR_SANITIZED%-%BUILD_TYPE%"
+if not "%SANITIZER%"=="" (
+    set "BUILD_DIR=%BUILD_DIR%-%SANITIZER%"
+)
+
 if not exist "%BUILD_DIR%" mkdir "%BUILD_DIR%"
+if not exist "%CONAN_DIR%" mkdir "%CONAN_DIR%"
 
-REM Устанавливаем зависимости в папку сборки
-conan install . --build=missing -s build_type=%BUILD_TYPE% --output-folder="%BUILD_DIR%"
-if errorlevel 1 exit /b 1
+:: ==============================
+:: Conan install
+:: ==============================
+echo >>> Running Conan install...
+conan install . ^
+    --output-folder="%CONAN_DIR%" ^
+    --build=missing
 
-REM Если в корне сгенерировались пресеты — переносим в build
-if exist "CMakePresets.json" move /Y "CMakePresets.json" "%BUILD_DIR%" >nul
-if exist "CMakeUserPresets.json" move /Y "CMakeUserPresets.json" "%BUILD_DIR%" >nul
+:: ==============================
+:: Configure with CMake
+:: ==============================
+echo >>> Configuring build:
+echo     Type:      %BUILD_TYPE%
+echo     Generator: %GENERATOR%
+echo     Sanitizer: %SANITIZER%
+echo     Build dir: %BUILD_DIR%
+echo     Conan dir: %CONAN_DIR%
 
-REM Переходим в папку сборки
-cd "%BUILD_DIR%"
-
-REM Генерация CMake проекта
-cmake .. -G "%GENERATOR%" ^
+cmake -S . -B "%BUILD_DIR%" ^
+    -G "%GENERATOR%" ^
     -DCMAKE_BUILD_TYPE=%BUILD_TYPE% ^
-    -DCMAKE_TOOLCHAIN_FILE="%BUILD_DIR%\conan_toolchain.cmake"
-if errorlevel 1 exit /b 1
+    -DCMAKE_TOOLCHAIN_FILE=%cd%\cmake\toolchain.cmake ^
+    %SANITIZER:^=-DSANITIZER=%SANITIZER%%
 
-REM Сборка проекта
-cmake --build .
-if errorlevel 1 exit /b 1
-
-cd ..
-endlocal
+:: ==============================
+:: Build
+:: ==============================
+echo >>> Building...
+cmake --build "%BUILD_DIR%" --parallel

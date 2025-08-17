@@ -1,0 +1,30 @@
+{
+    "recommendations": [
+        // Git
+        "eamodio.gitlens",
+        "ms-vscode.git",
+        // CMake
+        "ms-vscode.cmake-tools",
+        "twxs.cmake",
+        // C++ (синтаксис, автодополнение, отладка)
+        "ms-vscode.cpptools",
+        "ms-vscode.cpptools-extension-pack",
+        "llvm-vs-code-extensions.vscode-clangd", // clangd (включает clang-tidy)
+        "xaver.clang-format", // clang-format
+        // Google Test (через CMake + C++)
+        // Отдельного расширения нет, достаточно вышеуказанных
+        // Markdown
+        "yzhang.markdown-all-in-one",
+        "DavidAnson.vscode-markdownlint",
+        // INI
+        "DavidWang.ini-for-vscode",
+        // Docker
+        "ms-azuretools.vscode-docker",
+        // SSH и удалённые машины
+        "ms-vscode.remote-ssh",
+        "ms-vscode-remote.remote-containers",
+        // Copilot
+        "github.copilot",
+        "github.copilot-chat"
+    ]
+}

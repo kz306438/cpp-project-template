@@ -103,3 +103,13 @@ cmake -S . -B "%BUILD_DIR%" ^
 :: ==============================
 echo >>> Building...
 cmake --build "%BUILD_DIR%" --parallel
+
+:: ==============================
+:: Copy compile_commands.json
+:: ==============================
+if exist "%BUILD_DIR%\compile_commands.json" (
+    echo >>> Copying compile_commands.json to project root...
+    copy /Y "%BUILD_DIR%\compile_commands.json" "%cd%\compile_commands.json" >nul
+) else (
+    echo !!! compile_commands.json not found in %BUILD_DIR%
+)
